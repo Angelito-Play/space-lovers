@@ -79,6 +79,15 @@
       scene.clouds = scene.physics.add.group();
       scene.powerups = scene.physics.add.group();
 
+      // ---- TEXTURAS BÁSICAS (una vez) ----
+      const g = scene.add.graphics();
+      g.clear();
+      g.fillStyle(0xffffff, 1);
+      g.fillRect(7, 6, 2, 12);               // palito
+      g.fillTriangle(8, 0, 2, 8, 14, 8);     // punta
+      g.generateTexture("arrowTex", 16, 18);
+      g.destroy();
+
       scene.keys = scene.input.keyboard.addKeys({
         left: Phaser.Input.Keyboard.KeyCodes.LEFT,
         right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
@@ -174,7 +183,7 @@
         updateBoss(scene, time, delta);
       }
 
-      scene.playerArrows.children.each(a => { if (a.y < -40) a.destroy(); });
+      scene.playerArrows.children.each(a => { if (a.active && a.y < -40) a.destroy(); });
       scene.enemyDrops.children.each(d => { if (d.y > H + 60) d.destroy(); });
       scene.powerups.children.each(p => { if (p.y > H + 60) p.destroy(); });
       scene.clouds.children.each(c => { if (c.y < -60) c.destroy(); });
@@ -191,18 +200,18 @@
       const angles = isTriple ? [-12, 0, 12] : [0];
 
       angles.forEach(aDeg => {
-        const arrow = scene.add.text(x, y, "➶", { fontSize:"26px" }).setOrigin(0.5);
-        scene.physics.add.existing(arrow);
+        const arrow = scene.physics.add.image(x, y, "arrowTex");
+        arrow.setDepth(5);
         arrow.body.setAllowGravity(false);
         arrow.body.setVelocity(0, -520);
 
         if (aDeg !== 0){
-          const vx = Phaser.Math.DegToRad(aDeg);
-          arrow.body.setVelocityX(Math.sin(vx) * 220);
+          const rad = Phaser.Math.DegToRad(aDeg);
+          arrow.body.setVelocityX(Math.sin(rad) * 220);
         }
 
+        arrow.body.setSize(10, 16, true);
         arrow.data = { pierce: isPierce, hitsLeft: isPierce ? 99 : 1 };
-        arrow.body.setSize(16, 16, true);
         scene.playerArrows.add(arrow);
       });
     }
