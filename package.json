@@ -1,0 +1,13 @@
+{
+  "name": "angel-invaders",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve public -l 3000 --no-clipboard",
+    "build": "echo 'Static site, no build needed'",
+    "start": "npx serve public -l 3000 --no-clipboard"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
